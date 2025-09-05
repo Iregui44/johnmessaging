@@ -1,6 +1,6 @@
-package com.johnmessaging.infraestructure.persistence.repository;
+package com.johnmessaging.infrastructure.persistence.repository;
 
-import com.johnmessaging.infraestructure.persistence.entity.ProcessedRecordEntity;
+import com.johnmessaging.infrastructure.persistence.entity.ProcessedRecordEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

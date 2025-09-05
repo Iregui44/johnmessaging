@@ -1,9 +1,9 @@
-package com.johnmessaging.infraestructure.persistence.adapter;
+package com.johnmessaging.infrastructure.persistence.adapter;
 
 import com.johnmessaging.domain.model.MessageStatus;
 import com.johnmessaging.domain.ports.ProcessedRecordRepository;
-import com.johnmessaging.infraestructure.persistence.entity.ProcessedRecordEntity;
-import com.johnmessaging.infraestructure.persistence.repository.ProcessedRecordJpaRepo;
+import com.johnmessaging.infrastructure.persistence.entity.ProcessedRecordEntity;
+import com.johnmessaging.infrastructure.persistence.repository.ProcessedRecordJpaRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

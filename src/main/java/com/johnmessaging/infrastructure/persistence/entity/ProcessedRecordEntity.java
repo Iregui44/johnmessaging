@@ -1,4 +1,4 @@
-package com.johnmessaging.infraestructure.persistence.entity;
+package com.johnmessaging.infrastructure.persistence.entity;
 
 import com.johnmessaging.domain.model.MessageStatus;
 import jakarta.persistence.*;
