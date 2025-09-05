@@ -3,6 +3,7 @@ package com.johnmessaging.application.service;
 import com.johnmessaging.application.dto.MachineMessage;
 import com.johnmessaging.domain.model.MessageStatus;
 import com.johnmessaging.domain.ports.AuthorizationPort;
+import com.johnmessaging.domain.ports.OutQueuePort;
 import com.johnmessaging.domain.ports.ProcessedRecordRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,17 +17,20 @@ public class MessageProcessorService {
 
     private final AuthorizationPort authorization;
 
-    public MessageStatus process(@Valid MachineMessage msg) {
-        if (processedRepo.exists(msg.sessionGuid(), msg.sequenceNumber())) {
+    private final OutQueuePort outQueue;
+
+    public MessageStatus process(@Valid MachineMessage message) {
+        if (processedRepo.exists(message.sessionGuid(), message.sequenceNumber())) {
             return MessageStatus.DUPLICATE;
         }
 
-        if (!authorization.isAuthorized(msg.machineId())) {
-            processedRepo.save(msg.sessionGuid(), msg.sequenceNumber(), msg.machineId(), MessageStatus.REJECTED);
+        if (!authorization.isAuthorized(message.machineId())) {
+            processedRepo.save(message.sessionGuid(), message.sequenceNumber(), message.machineId(), MessageStatus.REJECTED);
             return MessageStatus.REJECTED;
         }
 
-        processedRepo.save(msg.sessionGuid(), msg.sequenceNumber(), msg.machineId(), MessageStatus.ACCEPTED);
+        processedRepo.save(message.sessionGuid(), message.sequenceNumber(), message.machineId(), MessageStatus.ACCEPTED);
+        outQueue.publish(message);
         return MessageStatus.ACCEPTED;
     }
 }

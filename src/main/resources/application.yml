@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:h2:mem:challenge;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
-    username: sa
-    password:
+    username: local
+    password: local
   jpa:
     hibernate:
       ddl-auto: update
@@ -20,3 +20,10 @@ app:
   auth:
     base-url: http://localhost:8080
     whitelist: [1, 2, 3, 42]
+
+aws:
+  region: eu-west-1
+  endpoint: http://localhost:4566
+  sqs:
+    in-queue-url: http://localhost:4566/000000000000/sqs1
+    out-queue-url: http://localhost:4566/000000000000/sqs2
