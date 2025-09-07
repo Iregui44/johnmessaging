@@ -16,7 +16,6 @@ import software.amazon.awssdk.services.sqs.model.*;
 import java.util.List;
 
 @Component
-@EnableScheduling
 @Slf4j
 public class SqsInAdapter {
 
@@ -34,6 +33,7 @@ public class SqsInAdapter {
 
     @Scheduled(fixedDelay = 1000)
     public void poll() {
+        log.debug("Start polling");
         ReceiveMessageRequest req = ReceiveMessageRequest.builder()
                 .queueUrl(inUrl)
                 .maxNumberOfMessages(10)
@@ -47,12 +47,6 @@ public class SqsInAdapter {
             try {
                 MachineMessage machineMessage = objectMapper.readValue(message.body(), MachineMessage.class);
                 MessageStatus messageStatus = processor.process(machineMessage);
-                if (MessageStatus.REJECTED.equals(messageStatus)) {
-                    log.debug("Message Unauthorized");
-                }
-                if (MessageStatus.DUPLICATE.equals(messageStatus)) {
-                    log.debug("Message Duplicated");
-                }
                 deleteMessage(message.receiptHandle());
                 log.debug("Message forwarded to sqs2 and deleted from sqs1");
             } catch (Exception ex) {

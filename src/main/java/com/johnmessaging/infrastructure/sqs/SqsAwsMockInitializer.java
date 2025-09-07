@@ -3,11 +3,11 @@ package com.johnmessaging.infrastructure.sqs;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.johnmessaging.application.dto.MachineMessage;
-import com.johnmessaging.infrastructure.config.AppProperties;
 import com.johnmessaging.infrastructure.config.AwsProperties;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.sqs.SqsClient;
 import software.amazon.awssdk.services.sqs.model.CreateQueueRequest;
@@ -21,13 +21,14 @@ import java.util.UUID;
 
 @Component
 @Profile("dev")
+@EnableScheduling
 @Slf4j
-public class SqsAwsInitializer {
+public class SqsAwsMockInitializer {
     private final SqsClient sqs;
     private final AwsProperties props;
     private final ObjectMapper objectMapper;
 
-    public SqsAwsInitializer(SqsClient sqs, AwsProperties props, ObjectMapper om) {
+    public SqsAwsMockInitializer(SqsClient sqs, AwsProperties props, ObjectMapper om) {
         this.sqs = sqs;
         this.props = props;
         this.objectMapper = om;
@@ -61,6 +62,7 @@ public class SqsAwsInitializer {
 
     private void populateInQueue() throws JsonProcessingException {
         UUID session1 = UUID.randomUUID();
+        log.info("Population Queues with session {}", session1);
         MachineMessage message = new MachineMessage(
                 session1,
                 1,
@@ -73,6 +75,7 @@ public class SqsAwsInitializer {
                 .queueUrl(inUrl)
                 .messageBody(body)
                 .build());
+        log.info("Population Queues with session {}", session1);
         MachineMessage message2 = new MachineMessage(
                 session1,
                 1,
@@ -85,6 +88,7 @@ public class SqsAwsInitializer {
                 .messageBody(body2)
                 .build());
         UUID session2 = UUID.randomUUID();
+        log.info("Population Queues with session {}", session2);
         MachineMessage message3 = new MachineMessage(
                 session2,
                 1,
@@ -94,7 +98,7 @@ public class SqsAwsInitializer {
         String body3 = objectMapper.writeValueAsString(message3);
         sqs.sendMessage(SendMessageRequest.builder()
                 .queueUrl(inUrl)
-                .messageBody(body2)
+                .messageBody(body3)
                 .build());
 
     }
