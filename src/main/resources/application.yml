@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:challenge;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
+    username: local
+    password: local
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.jdbc.time_zone: UTC
+  h2:
+    console:
+      enabled: true
+
+logging:
+  level:
+    org.hibernate.SQL: warn
+    com.johnmessaging.infrastructure.sqs: DEBUG
+    com.johnmessaging.application.service.MessageProcessorService: DEBUG
+    org.springframework.scheduling: INFO
+    org.springframework.http.client: DEBUG
+    com.johnmessaging.infrastructure.http.AuthorizationHttpAdapter: DEBUG
+
+app:
+  auth:
+    base-url: http://localhost:8080
+    whitelist: [ 1, 2, 3, 42 ]
+  retry:
+    out:
+      max-attempts: 3
+      base-delay-ms: 200
+
+aws:
+  region: eu-west-1
+  endpoint: http://localhost:4566
+  sqs:
+    in-queue-url: http://localhost:4566/000000000000/sqs1
+    out-queue-url: http://localhost:4566/000000000000/sqs2
