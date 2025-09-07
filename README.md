@@ -1,20 +1,48 @@
-try no to put to much obvios name in thing for john deere.
-git only use development but i kmnow it should be in branches fro each feature and more.
-the model is created for avoiding damage when the message data changes. comon.
-not tdd but test as soon and as much as i can.
-to run mock whitelist autehtication and local queue initialization star de proyect with -Dspring.profiles.active=dev
-you acantest authorized client and mock with curl --location 'http://localhost:8080/api/machines/30/authorized'
-many ways to better it up: chain of responsabilit patter in service or something like that. or use aws sqs templates and async clients. separar variabels pòr entorno, TRANDSACCIONALIDD SI NO PUBLICA NO GUARDA Y ASI.
 # JohnMessaging
 
-Backend demo para procesamiento de mensajes de maquinaria usando SQS (LocalStack).
+Backend demo for processing machinery messages using AWS SQS (with LocalStack for local development).  
+This project was created as a technical exercise to demonstrate message ingestion, authorization, deduplication, persistence, and forwarding.
 
-## 🚀 Requisitos
-- Docker y Docker Compose instalados
-- (opcional) Maven y JDK 17 si quieres compilar localmente
+## Features
+- Polls messages from an input SQS queue
+- Deduplicates based on (sessionGuid, sequenceNumber)
+- Validates machine authorization against a REST endpoint
+- Persists processed records in a relational database
+- Forwards authorized and accepted messages to an output SQS queue
+- Marks rejected or duplicate messages without forwarding
+- Includes retry logic for SQS publishing failures
+- Configurable through Spring Boot properties
 
-## ▶️ Arranque rápido
+## Design Choices
+- Model design: Message DTOs are isolated from persistence models to avoid coupling and reduce impact when message structure evolves.
+- Testing strategy: Not strict TDD, but tests were added early and extensively at both unit and integration levels.
+- Profiles: dev includes mocks for HTTP authorization and queue seeding, while test uses Testcontainers to simulate real services.
+- Error handling: Failures in publishing are retried, but transactional consistency can be improved (see below).
 
-compose build
-compose up (queda en dv para que prueben como seria pero sin dev queda apuntando a las variables del configuration)
-solo es descargar el probgrama y hacer los pasos del compose. 
+## Possible Improvements
+- Use a chain of responsibility pattern for message validation and processing
+- Replace synchronous AWS SDK client with the async client for higher throughput
+- Externalize configuration variables per environment (e.g., via Spring Cloud Config or AWS Parameter Store)
+- Improve transactional guarantees: if a message is persisted but not forwarded, it should be rolled back or retried as a unit
+- Adopt stricter TDD and CI/CD pipelines
+- Use AWS SQS listener templates instead of manual polling
+
+## Requirements
+- Docker and Docker Compose installed
+- (Optional) JDK 17 and Maven if you want to build and run outside Docker
+
+## Deployment and Running
+
+1. Build the project and supporting services:
+   ```bash
+   docker-compose build
+
+2. Build the project and supporting services:
+   ```bash
+   docker-compose up
+
+By default, the project runs with the dev profile, which enables local queue initialization and a mock whitelist-based authorization controller.
+This allows testing without connecting to real AWS services or external authentication. But if you want to test real connection and queueing all is based on application-yml properties.
+
+## Test
+There are 3 clases of junit tests and one big IT which you can run simultaneusly from any IDE by click run all tests on java folder.
