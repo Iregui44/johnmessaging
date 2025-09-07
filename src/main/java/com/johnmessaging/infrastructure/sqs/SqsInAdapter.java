@@ -42,7 +42,6 @@ public class SqsInAdapter {
 
         List<Message> messages = sqs.receiveMessage(req).messages();
         if (messages == null || messages.isEmpty()) return;
-
         for (Message message : messages) {
             try {
                 MachineMessage machineMessage = objectMapper.readValue(message.body(), MachineMessage.class);

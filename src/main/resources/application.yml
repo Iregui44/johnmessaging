@@ -23,6 +23,10 @@ app:
   auth:
     base-url: http://localhost:8080
     whitelist: [ 1, 2, 3, 42 ]
+  retry:
+    out:
+      max-attempts: 3
+      base-delay-ms: 200
 
 aws:
   region: eu-west-1
