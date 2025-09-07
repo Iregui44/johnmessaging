@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@Profile("dev")
+@Profile({"dev", "test"})
 @RequestMapping("/api/machines")
 public class AuthorizationMockController {
 

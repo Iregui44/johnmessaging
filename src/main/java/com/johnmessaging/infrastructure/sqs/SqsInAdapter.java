@@ -4,10 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.johnmessaging.application.dto.MachineMessage;
 import com.johnmessaging.application.service.MessageProcessorService;
 import com.johnmessaging.domain.model.MessageStatus;
-import com.johnmessaging.infrastructure.config.AppProperties;
 import com.johnmessaging.infrastructure.config.AwsProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.sqs.SqsClient;
@@ -31,7 +29,7 @@ public class SqsInAdapter {
         this.inUrl = props.getSqs().getInQueueUrl();
     }
 
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 2000, initialDelay = 3000)
     public void poll() {
         log.debug("Start polling");
         ReceiveMessageRequest req = ReceiveMessageRequest.builder()

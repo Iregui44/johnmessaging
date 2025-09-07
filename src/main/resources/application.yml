@@ -18,6 +18,8 @@ logging:
     com.johnmessaging.infrastructure.sqs: DEBUG
     com.johnmessaging.application.service.MessageProcessorService: DEBUG
     org.springframework.scheduling: INFO
+    org.springframework.http.client: DEBUG
+    com.johnmessaging.infrastructure.http.AuthorizationHttpAdapter: DEBUG
 
 app:
   auth:

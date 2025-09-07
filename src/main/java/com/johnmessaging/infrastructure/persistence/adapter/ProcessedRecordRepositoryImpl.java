@@ -22,7 +22,7 @@ public class ProcessedRecordRepositoryImpl implements ProcessedRecordRepository 
 
     @Override
     public void save(UUID sessionGuid, long sequenceNumber, long machineId, MessageStatus status) {
-        repo.save(ProcessedRecordEntity.builder()
+        repo.saveAndFlush(ProcessedRecordEntity.builder()
                 .sessionGuid(sessionGuid)
                 .sequenceNumber(sequenceNumber)
                 .machineId(machineId)

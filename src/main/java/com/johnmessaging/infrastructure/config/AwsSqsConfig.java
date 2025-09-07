@@ -17,7 +17,7 @@ public class AwsSqsConfig {
     @Bean
     public SqsClient sqsClient(AwsProperties props) {
         return SqsClient.builder()
-                .region(Region.of(System.getProperty("aws.region", "eu-west-1")))
+                .region(Region.of(props.getRegion()))
                 .credentialsProvider(StaticCredentialsProvider.create(
                         AwsBasicCredentials.create("test", "test")))
                 .endpointOverride(URI.create(props.getEndpoint()))
